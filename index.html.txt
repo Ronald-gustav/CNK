@@ -1,0 +1,76 @@
+<div id="view-chat" class="view">
+    <button onclick="switchView('matches', document.querySelectorAll('.nav-btn')[2])" style="background:none; border:none; color:var(--pink); cursor:pointer;">⬅ Kembali</button>
+    <h3 id="chat-with-name">Chat</h3>
+    <div id="chat-box" style="height: 300px; border: 1px solid #ddd; background: #fff; overflow-y: scroll; padding: 10px; border-radius: 10px; display: flex; flex-direction: column;">
+        </div>
+    <div style="display: flex; margin-top: 10px; gap: 5px;">
+        <input type="text" id="chat-input" placeholder="Tulis pesan..." style="margin-bottom: 0;">
+        <button onclick="sendMessage()" style="width: 80px; padding: 0;" class="btn-save">Kirim</button>
+    </div>
+</div>
+
+<script>
+    let activeChatPartner = "";
+
+    // Fungsi untuk membuka chat
+    function openChat(name) {
+        activeChatPartner = name;
+        document.getElementById('chat-with-name').innerText = "Chat dengan " + name;
+        document.getElementById('chat-box').innerHTML = ""; // Bersihkan chat lama
+        switchView('chat', document.querySelectorAll('.nav-btn')[2]);
+        
+        // Pesan otomatis dari "Sistem" sebagai simulasi
+        addMessage(name, "Halo! Salam kenal ya.");
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const pesan = input.value;
+        if (pesan) {
+            addMessage("Kamu", pesan);
+            input.value = ""; // Kosongkan input
+            
+            // Simulasi balasan otomatis setelah 1 detik (Gratis & Sederhana)
+            setTimeout(() => {
+                addMessage(activeChatPartner, "Wah, menarik sekali!");
+            }, 1000);
+        }
+    }
+
+    function addMessage(sender, text) {
+        const chatBox = document.getElementById('chat-box');
+        const msgDiv = document.createElement('div');
+        msgDiv.style.margin = "5px 0";
+        msgDiv.style.padding = "8px 12px";
+        msgDiv.style.borderRadius = "15px";
+        msgDiv.style.maxWidth = "80%";
+        
+        if(sender === "Kamu") {
+            msgDiv.style.alignSelf = "flex-end";
+            msgDiv.style.background = "var(--pink)";
+            msgDiv.style.color = "white";
+        } else {
+            msgDiv.style.alignSelf = "flex-start";
+            msgDiv.style.background = "#eee";
+        }
+        
+        msgDiv.innerText = text;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll otomatis ke bawah
+    }
+
+    // Update fungsi updateMatchList agar bisa diklik
+    function updateMatchList() {
+        const listDiv = document.getElementById('match-list');
+        listDiv.innerHTML = "";
+        myMatches.forEach(m => {
+            listDiv.innerHTML += `
+                <div onclick="openChat('${m.nama}')" style="background:white; padding:10px; margin-bottom:5px; border-radius:10px; display:flex; align-items:center; gap:10px; cursor:pointer;">
+                    <img src="${m.img}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+                    <b>${m.nama}</b>
+                    <small style="color:green; margin-left:auto;">Klik untuk Chat</small>
+                </div>
+            `;
+        });
+    }
+</script>
